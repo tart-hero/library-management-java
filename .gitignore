@@ -1,0 +1,16 @@
+# Java
+target/
+*.class
+
+# IntelliJ / VSCode
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# Env
+.env
