@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Đăng ký tài khoản thư viện</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        input, select { width: 300px; padding: 5px; }
+        button { padding: 10px 20px; }
+    </style>
+</head>
+<body>
+
+<h2>Phiếu đăng ký tài khoản thư viện</h2>
+
+<form action="/register" method="post" enctype="multipart/form-data">
+
+    <!-- Họ tên -->
+    Họ và tên:
+    <input type="text" name="name" required>
+    <br><br>
+
+    <!-- Giới tính -->
+    Giới tính:
+    <select name="gender" required>
+        <option value="">-- Chọn giới tính --</option>
+        <option value="male">Nam</option>
+        <option value="female">Nữ</option>
+        <option value="other">Khác</option>
+    </select>
+    <br><br>
+
+    <!-- Ngày sinh -->
+    Ngày tháng năm sinh:
+    <input type="date" name="dob" required>
+    <br><br>
+
+    <!-- Nơi sinh -->
+    Nơi sinh:
+    <input type="text" name="birthPlace">
+    <br><br>
+
+    <!-- CCCD -->
+    Số CCCD:
+    <input type="number" name="cccd" required>
+    <br><br>
+
+    <!-- Nơi cấp -->
+    Nơi cấp:
+    <input type="text" name="issuePlace">
+    <br><br>
+
+    <!-- Chuyên môn -->
+    Chuyên môn:
+    <input type="text" name="specialization">
+    <br><br>
+
+    <!-- Nơi công tác -->
+    Nơi công tác:
+    <input type="text" name="workplace">
+    <br><br>
+
+    <!-- Địa chỉ -->
+    Địa chỉ liên hệ:
+    <input type="text" name="address">
+    <br><br>
+
+    <!-- Điện thoại -->
+    Điện thoại liên hệ:
+    <input type="tel" name="phone" required>
+    <br><br>
+
+    <!-- Email -->
+    Email:
+    <input type="email" name="email" required>
+    <br><br>
+
+    <!-- Ảnh -->
+    Ảnh người đăng ký:
+    <input type="file" name="avatar" accept="image/*">
+    <br><br>
+
+    <button type="submit">Đăng ký</button>
+
+</form>
+
+</body>
+</html>
