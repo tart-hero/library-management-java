@@ -1,88 +1,267 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Đăng ký tài khoản thư viện</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phieu dang ky tai khoan thu vien</title>
     <style>
-        body { font-family: Arial; margin: 40px; }
-        input, select { width: 300px; padding: 5px; }
-        button { padding: 10px 20px; }
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            background: #f6f2ea;
+            color: #2d261f;
+        }
+
+        .page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 16px 48px;
+        }
+
+        .card {
+            background: #fffdf9;
+            border: 1px solid #dbcdbd;
+            border-radius: 20px;
+            box-shadow: 0 18px 50px rgba(77, 50, 31, 0.12);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 24px 28px;
+            background: #f2e6d8;
+            border-bottom: 1px solid #dbcdbd;
+        }
+
+        .header p {
+            margin: 0 0 8px;
+            font-size: 0.9rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #7a3b1d;
+            font-weight: 700;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.3rem;
+        }
+
+        .header span {
+            display: block;
+            margin-top: 10px;
+            color: #675f57;
+            line-height: 1.6;
+        }
+
+        form {
+            padding: 24px 28px 32px;
+        }
+
+        .error-summary {
+            margin-bottom: 20px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #fff1f0;
+            border: 1px solid #f0c3be;
+            color: #b42318;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 700;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cdbfad;
+            border-radius: 12px;
+            background: #fff;
+            font: inherit;
+        }
+
+        .field-error-input {
+            border-color: #d92d20;
+            background: #fff7f6;
+        }
+
+        .field-error {
+            color: #b42318;
+            font-size: 0.92rem;
+        }
+
+        .hint {
+            margin: -2px 0 0;
+            color: #675f57;
+            font-size: 0.92rem;
+        }
+
+        .actions {
+            margin-top: 24px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 13px 24px;
+            background: #7a3b1d;
+            color: #fff;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .note {
+            color: #675f57;
+        }
+
+        .link-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 22px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+            color: #7a3b1d;
+            background: #fff;
+            border: 1px solid #cdbfad;
+        }
+
+        @media (max-width: 760px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header,
+            form {
+                padding: 20px 18px;
+            }
+        }
     </style>
 </head>
 <body>
+<main class="page">
+    <section class="card">
+        <div class="header">
+            <p>FR07 - Nhap lieu</p>
+            <h1>Phieu dang ky tai khoan thu vien</h1>
+            <span>Man hinh nay danh cho chuyen vien luu hanh de tiep nhan va luu ho so dang ky vao he thong.</span>
+        </div>
 
-<h2>Phiếu đăng ký tài khoản thư viện</h2>
+        <form th:action="@{/register}" th:object="${registerForm}" method="post" enctype="multipart/form-data">
+            <div class="error-summary" th:if="${#fields.hasAnyErrors()}">
+                Vui long kiem tra lai cac truong du lieu truoc khi luu ho so.
+            </div>
 
-<form action="/register" method="post" enctype="multipart/form-data">
+            <div class="grid">
+                <div class="field">
+                    <label for="name">Ho va ten</label>
+                    <input id="name" type="text" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
 
-    <!-- Họ tên -->
-    Họ và tên:
-    <input type="text" name="name" required>
-    <br><br>
+                <div class="field">
+                    <label for="gender">Gioi tinh</label>
+                    <select id="gender" th:field="*{gender}" th:classappend="${#fields.hasErrors('gender')} ? 'field-error-input'">
+                        <option value="">-- Chon gioi tinh --</option>
+                        <option value="male">Nam</option>
+                        <option value="female">Nu</option>
+                        <option value="other">Khac</option>
+                    </select>
+                    <div class="field-error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
+                </div>
 
-    <!-- Giới tính -->
-    Giới tính:
-    <select name="gender" required>
-        <option value="">-- Chọn giới tính --</option>
-        <option value="male">Nam</option>
-        <option value="female">Nữ</option>
-        <option value="other">Khác</option>
-    </select>
-    <br><br>
+                <div class="field">
+                    <label for="dob">Ngay thang nam sinh</label>
+                    <input id="dob" type="date" th:field="*{dob}" th:classappend="${#fields.hasErrors('dob')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}"></div>
+                </div>
 
-    <!-- Ngày sinh -->
-    Ngày tháng năm sinh:
-    <input type="date" name="dob" required>
-    <br><br>
+                <div class="field">
+                    <label for="birthPlace">Noi sinh</label>
+                    <input id="birthPlace" type="text" th:field="*{birthPlace}" th:classappend="${#fields.hasErrors('birthPlace')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('birthPlace')}" th:errors="*{birthPlace}"></div>
+                </div>
 
-    <!-- Nơi sinh -->
-    Nơi sinh:
-    <input type="text" name="birthPlace">
-    <br><br>
+                <div class="field">
+                    <label for="cccd">So CCCD</label>
+                    <input id="cccd" type="text" inputmode="numeric" th:field="*{cccd}" th:classappend="${#fields.hasErrors('cccd')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('cccd')}" th:errors="*{cccd}"></div>
+                </div>
 
-    <!-- CCCD -->
-    Số CCCD:
-    <input type="number" name="cccd" required>
-    <br><br>
+                <div class="field">
+                    <label for="issuePlace">Noi cap</label>
+                    <input id="issuePlace" type="text" th:field="*{issuePlace}" th:classappend="${#fields.hasErrors('issuePlace')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('issuePlace')}" th:errors="*{issuePlace}"></div>
+                </div>
 
-    <!-- Nơi cấp -->
-    Nơi cấp:
-    <input type="text" name="issuePlace">
-    <br><br>
+                <div class="field">
+                    <label for="specialization">Chuyen mon</label>
+                    <input id="specialization" type="text" th:field="*{specialization}" th:classappend="${#fields.hasErrors('specialization')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('specialization')}" th:errors="*{specialization}"></div>
+                </div>
 
-    <!-- Chuyên môn -->
-    Chuyên môn:
-    <input type="text" name="specialization">
-    <br><br>
+                <div class="field">
+                    <label for="workplace">Noi cong tac</label>
+                    <input id="workplace" type="text" th:field="*{workplace}" th:classappend="${#fields.hasErrors('workplace')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('workplace')}" th:errors="*{workplace}"></div>
+                </div>
 
-    <!-- Nơi công tác -->
-    Nơi công tác:
-    <input type="text" name="workplace">
-    <br><br>
+                <div class="field full">
+                    <label for="address">Dia chi lien he</label>
+                    <input id="address" type="text" th:field="*{address}" th:classappend="${#fields.hasErrors('address')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+                </div>
 
-    <!-- Địa chỉ -->
-    Địa chỉ liên hệ:
-    <input type="text" name="address">
-    <br><br>
+                <div class="field">
+                    <label for="phone">Dien thoai lien he</label>
+                    <input id="phone" type="tel" th:field="*{phone}" th:classappend="${#fields.hasErrors('phone')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                </div>
 
-    <!-- Điện thoại -->
-    Điện thoại liên hệ:
-    <input type="tel" name="phone" required>
-    <br><br>
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
 
-    <!-- Email -->
-    Email:
-    <input type="email" name="email" required>
-    <br><br>
+                <div class="field full">
+                    <label for="avatar">Anh nguoi dang ky</label>
+                    <div class="hint">Chap nhan tep hinh anh, dung luong toi da 5MB.</div>
+                    <input id="avatar" type="file" name="avatar" accept="image/*" th:classappend="${#fields.hasErrors('avatar')} ? 'field-error-input'">
+                    <div class="field-error" th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}"></div>
+                </div>
+            </div>
 
-    <!-- Ảnh -->
-    Ảnh người đăng ký:
-    <input type="file" name="avatar" accept="image/*">
-    <br><br>
-
-    <button type="submit">Đăng ký</button>
-
-</form>
-
+            <div class="actions">
+                <button type="submit">Luu ho so dang ky</button>
+                <a class="link-button" th:href="@{/registrations}">Tra cuu ho so da luu</a>
+                <span class="note">Thong tin se duoc ghi nhan vao he thong de phuc vu cac buoc xu ly tiep theo.</span>
+            </div>
+        </form>
+    </section>
+</main>
 </body>
 </html>

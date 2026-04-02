@@ -1,0 +1,344 @@
+﻿<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiet ho so luu tru</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            background: #f4f0f7;
+            color: #2f2240;
+        }
+
+        .page {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 32px 16px 48px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.97);
+            border: 1px solid #ddd2eb;
+            border-radius: 20px;
+            box-shadow: 0 18px 52px rgba(76, 45, 118, 0.12);
+            padding: 24px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(220px, 300px) 1fr;
+            gap: 24px;
+        }
+
+        .hero img {
+            width: 100%;
+            display: block;
+            border-radius: 16px;
+            object-fit: cover;
+            aspect-ratio: 4 / 5;
+            border: 1px solid #ddd2eb;
+        }
+
+        h1 {
+            margin: 0 0 6px;
+            font-size: 2.2rem;
+        }
+
+        .lead {
+            margin: 0 0 18px;
+            color: #655777;
+            line-height: 1.6;
+        }
+
+        .archive-box,
+        .account-grid,
+        .meta {
+            display: grid;
+            gap: 12px;
+        }
+
+        .archive-box {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-bottom: 18px;
+        }
+
+        .account-grid,
+        .meta {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px 16px;
+        }
+
+        .archive-item,
+        .account-item,
+        .meta-item,
+        .notice-card,
+        .alert {
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid #e4daf0;
+            background: #f8f4fc;
+        }
+
+        .notice-card {
+            margin-top: 20px;
+            background: #f4f7ff;
+            border-color: #d7e0ff;
+        }
+
+        .alert {
+            margin-bottom: 18px;
+        }
+
+        .alert.success {
+            background: #eef8f0;
+            border-color: #cfe8d5;
+            color: #245238;
+        }
+
+        .alert.error {
+            background: #fff2f2;
+            border-color: #f0cccc;
+            color: #8a2f2f;
+        }
+
+        .archive-item strong,
+        .account-item strong,
+        .meta-item strong,
+        .notice-card strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: #655777;
+            text-transform: uppercase;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: #ede6f8;
+            color: #5b3f83;
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .pill.ready {
+            background: #fff2d6;
+            color: #8a5b00;
+        }
+
+        .pill.done {
+            background: #e5f7ea;
+            color: #1f6b37;
+        }
+
+        .section-title {
+            margin: 24px 0 12px;
+            font-size: 1.2rem;
+        }
+
+        .notice-card pre {
+            margin: 12px 0 0;
+            padding: 14px;
+            border-radius: 14px;
+            background: #fff;
+            border: 1px solid #d7e0ff;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font: inherit;
+            line-height: 1.6;
+        }
+
+        .actions,
+        .notice-actions {
+            margin-top: 18px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        a,
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 22px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+        }
+
+        form {
+            margin: 0;
+        }
+
+        .primary {
+            background: #5b3f83;
+            color: #fff;
+        }
+
+        .secondary {
+            background: #fff;
+            color: #5b3f83;
+            border: 1px solid #ddd2eb;
+        }
+
+        @media (max-width: 820px) {
+            .hero,
+            .archive-box,
+            .account-grid,
+            .meta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<main class="page">
+    <section class="card">
+        <div th:if="${statusMessage}" class="alert success" th:text="${statusMessage}"></div>
+        <div th:if="${errorMessage}" class="alert error" th:text="${errorMessage}"></div>
+
+        <div class="hero">
+            <div>
+                <img th:src="@{/register/avatar/{id}(id=${registration.id})}" alt="Anh nguoi dang ky">
+            </div>
+
+            <div>
+                <h1 th:text="${registration.name}"></h1>
+                <p class="lead">
+                    Ho so da duoc luu tai bo phan luu hanh va co the tra cuu lai bat ky luc nao
+                    trong he thong.
+                </p>
+
+                <div class="archive-box">
+                    <div class="archive-item">
+                        <strong>Ma luu tru</strong>
+                        <span th:text="${registration.storageCode}"></span>
+                    </div>
+                    <div class="archive-item">
+                        <strong>Noi luu</strong>
+                        <span th:text="${registration.storageLocation}"></span>
+                    </div>
+                    <div class="archive-item">
+                        <strong>Thoi gian luu</strong>
+                        <span th:text="${#temporals.format(registration.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                    </div>
+                </div>
+
+                <h2 class="section-title">Tai khoan thu vien</h2>
+                <div class="account-grid">
+                    <div class="account-item">
+                        <strong>Trang thai tai khoan</strong>
+                        <span class="pill" th:classappend="${registration.accountStatus.name() == 'ACTIVATED'} ? ' done' : ''"
+                              th:text="${registration.accountStatusLabel}"></span>
+                    </div>
+                    <div class="account-item">
+                        <strong>Trang thai thong bao</strong>
+                        <span class="pill"
+                              th:classappend="${registration.activationNotificationStatus.name() == 'READY_TO_SEND'} ? ' ready' : (${registration.activationNotificationStatus.name() == 'NOTIFIED'} ? ' done' : '')"
+                              th:text="${registration.activationNotificationStatusLabel}"></span>
+                    </div>
+                    <div class="account-item">
+                        <strong>Ten dang nhap</strong>
+                        <span th:text="${registration.libraryUsername != null ? registration.libraryUsername : 'Chua tao tai khoan'}"></span>
+                    </div>
+                    <div class="account-item">
+                        <strong>Han su dung</strong>
+                        <span th:text="${registration.accountExpiresAt != null ? #temporals.format(registration.accountExpiresAt, 'dd/MM/yyyy') : 'Chua ap dung'}"></span>
+                    </div>
+                    <div class="account-item">
+                        <strong>Thoi diem kich hoat</strong>
+                        <span th:text="${registration.accountActivatedAt != null ? #temporals.format(registration.accountActivatedAt, 'dd/MM/yyyy HH:mm') : 'Chua kich hoat'}"></span>
+                    </div>
+                    <div class="account-item">
+                        <strong>Da thong bao luc</strong>
+                        <span th:text="${registration.activationNotificationSentAt != null ? #temporals.format(registration.activationNotificationSentAt, 'dd/MM/yyyy HH:mm') : 'Chua ghi nhan'}"></span>
+                    </div>
+                </div>
+
+                <div class="notice-card" th:if="${activationPreview != null}">
+                    <strong>Thong bao kich hoat san sang gui</strong>
+                    <div>Thong bao nay da bao gom ten dang nhap, mat khau tam thoi va han su dung tai khoan.</div>
+                    <pre th:text="${activationPreview.body}"></pre>
+
+                    <div class="notice-actions">
+                        <a class="primary" th:href="${activationPreview.mailtoLink}">Mo ung dung email</a>
+                        <form th:action="@{/registrations/{id}/confirm-notification(id=${registration.id})}" method="post">
+                            <button class="secondary" type="submit">Da gui thong bao</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="notice-actions" th:if="${activationPreview == null}">
+                    <form th:action="@{/registrations/{id}/activate-account(id=${registration.id})}" method="post">
+                        <button class="primary" type="submit"
+                                th:text="${registration.accountStatus.name() == 'ACTIVATED'} ? 'Cap lai thong bao kich hoat' : 'Kich hoat tai khoan thu vien'"></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Thong tin dang ky</h2>
+        <div class="meta">
+            <div class="meta-item">
+                <strong>Gioi tinh</strong>
+                <span th:text="${registration.genderLabel}"></span>
+            </div>
+            <div class="meta-item">
+                <strong>Ngay sinh</strong>
+                <span th:text="${#temporals.format(registration.dob, 'dd/MM/yyyy')}"></span>
+            </div>
+            <div class="meta-item">
+                <strong>Noi sinh</strong>
+                <span th:text="${registration.birthPlace}"></span>
+            </div>
+            <div class="meta-item">
+                <strong>So CCCD</strong>
+                <span th:text="${registration.cccd}"></span>
+            </div>
+            <div class="meta-item">
+                <strong>Noi cap</strong>
+                <span th:text="${registration.issuePlace}"></span>
+            </div>
+            <div class="meta-item">
+                <strong>Chuyen mon</strong>
+                <span th:text="${registration.specialization}"></span>
+            </div>
+            <div class="meta-item">
+                <strong>Noi cong tac</strong>
+                <span th:text="${registration.workplace}"></span>
+            </div>
+            <div class="meta-item">
+                <strong>Dien thoai</strong>
+                <span th:text="${registration.phone}"></span>
+            </div>
+            <div class="meta-item">
+                <strong>Email</strong>
+                <span th:text="${registration.email}"></span>
+            </div>
+            <div class="meta-item">
+                <strong>Dia chi lien he</strong>
+                <span th:text="${registration.address}"></span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a class="primary" th:href="@{/registrations}">Quay lai danh sach ho so</a>
+            <a class="secondary" th:href="@{/register}">Nhap ho so moi</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>

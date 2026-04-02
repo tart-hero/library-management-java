@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luu tru ho so dang ky</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            background: #f3f5f7;
+            color: #1e2933;
+        }
+
+        .page {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 32px 16px 48px;
+        }
+
+        .header {
+            margin-bottom: 22px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 2.4rem;
+        }
+
+        .header p {
+            margin: 0;
+            max-width: 760px;
+            color: #5b6770;
+            line-height: 1.6;
+        }
+
+        .toolbar,
+        .table-card {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #d7dee4;
+            border-radius: 18px;
+            box-shadow: 0 16px 40px rgba(49, 74, 94, 0.1);
+        }
+
+        .toolbar {
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 12px;
+        }
+
+        input[type="search"] {
+            width: 100%;
+            min-height: 48px;
+            padding: 0 14px;
+            border-radius: 12px;
+            border: 1px solid #c7d0d8;
+            font: inherit;
+        }
+
+        button,
+        .link-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 20px;
+            border: none;
+            border-radius: 999px;
+            background: #244d6e;
+            color: #fff;
+            font: inherit;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .link-button.secondary {
+            background: #fff;
+            color: #244d6e;
+            border: 1px solid #c7d0d8;
+        }
+
+        .toolbar-footer {
+            margin-top: 14px;
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+            color: #5b6770;
+        }
+
+        .table-card {
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 16px 18px;
+            text-align: left;
+            border-bottom: 1px solid #e7edf2;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f6f9fb;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: #50616f;
+            letter-spacing: 0.05em;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pill {
+            display: inline-flex;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #edf4fa;
+            color: #244d6e;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .pill.ready {
+            background: #fff0d5;
+            color: #8a5b00;
+        }
+
+        .pill.done {
+            background: #e5f7ea;
+            color: #1f6b37;
+        }
+
+        .empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: #5b6770;
+        }
+
+        .empty strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #1e2933;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 920px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .table-card {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 1040px;
+            }
+        }
+    </style>
+</head>
+<body>
+<main class="page">
+    <header class="header">
+        <h1>Luu tru ho so dang ky</h1>
+        <p>
+            Chuyen vien luu hanh co the sap xep, tim kiem, kich hoat tai khoan thu vien va
+            ghi nhan viec thong bao kich hoat cho ban doc ngay trong danh sach ho so da luu.
+        </p>
+    </header>
+
+    <section class="toolbar">
+        <form class="search-form" th:action="@{/registrations}" method="get">
+            <input type="search" name="q" th:value="${searchTerm}" placeholder="Tim theo ho ten, email, CCCD, ma luu tru hoac ten dang nhap">
+            <button type="submit">Tim kiem</button>
+            <a class="link-button secondary" th:href="@{/register}">Nhap ho so moi</a>
+        </form>
+
+        <div class="toolbar-footer">
+            <span th:if="${#strings.isEmpty(searchTerm)}">Tong ho so da luu: <strong th:text="${#lists.size(registrations)}"></strong></span>
+            <span th:unless="${#strings.isEmpty(searchTerm)}">
+                Ket qua cho tu khoa "<strong th:text="${searchTerm}"></strong>": <strong th:text="${#lists.size(registrations)}"></strong>
+            </span>
+            <span>Noi luu mac dinh: Bo phan luu hanh</span>
+        </div>
+    </section>
+
+    <section class="table-card" th:if="${!#lists.isEmpty(registrations)}">
+        <table>
+            <thead>
+            <tr>
+                <th>Ma luu tru</th>
+                <th>Ho va ten</th>
+                <th>Thong tin lien he</th>
+                <th>Tai khoan TV</th>
+                <th>Thong bao kich hoat</th>
+                <th>Thoi gian luu</th>
+                <th>Thao tac</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="registration : ${registrations}">
+                <td><span class="pill" th:text="${registration.storageCode}"></span></td>
+                <td>
+                    <strong th:text="${registration.name}"></strong>
+                    <div th:text="${registration.genderLabel}"></div>
+                </td>
+                <td>
+                    <div th:text="${registration.email}"></div>
+                    <div th:text="${registration.phone}"></div>
+                </td>
+                <td>
+                    <div><span class="pill" th:classappend="${registration.accountStatus.name() == 'ACTIVATED'} ? ' done' : ''" th:text="${registration.accountStatusLabel}"></span></div>
+                    <div th:text="${registration.libraryUsername != null ? registration.libraryUsername : 'Chua tao'}"></div>
+                </td>
+                <td>
+                    <div>
+                        <span class="pill"
+                              th:classappend="${registration.activationNotificationStatus.name() == 'READY_TO_SEND'} ? ' ready' : (${registration.activationNotificationStatus.name() == 'NOTIFIED'} ? ' done' : '')"
+                              th:text="${registration.activationNotificationStatusLabel}"></span>
+                    </div>
+                    <div th:text="${registration.activationNotificationPreparedAt != null ? #temporals.format(registration.activationNotificationPreparedAt, 'dd/MM/yyyy HH:mm') : 'Chua soan'}"></div>
+                </td>
+                <td th:text="${#temporals.format(registration.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                <td>
+                    <a class="link-button secondary" th:href="@{/registrations/{id}(id=${registration.id})}">Xu ly ho so</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="table-card empty" th:if="${#lists.isEmpty(registrations)}">
+        <strong>Chua tim thay ho so phu hop</strong>
+        <span>Thu thay doi tu khoa tim kiem hoac tao moi ho so dang ky.</span>
+    </section>
+</main>
+</body>
+</html>
