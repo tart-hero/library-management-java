@@ -1,6 +1,11 @@
-package com.example.library;
+package com.example.library.backend.registration.controller;
 
 import java.io.IOException;
+
+import com.example.library.backend.registration.dto.ActivationNotificationPreview;
+import com.example.library.backend.registration.dto.RegisterForm;
+import com.example.library.backend.registration.model.LibraryRegistration;
+import com.example.library.backend.registration.service.RegisterService;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

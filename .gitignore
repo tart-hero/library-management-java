@@ -1,6 +1,8 @@
 # Java
 target/
 *.class
+.m2/
+maven-temp/
 
 # IntelliJ / VSCode
 .idea/

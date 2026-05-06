@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.backend.registration.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -93,7 +93,7 @@ public class LibraryRegistration {
     private String avatarContentType;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false, length = 5 * 1024 * 1024)
     private byte[] avatarData;
 
     @Column(nullable = false)

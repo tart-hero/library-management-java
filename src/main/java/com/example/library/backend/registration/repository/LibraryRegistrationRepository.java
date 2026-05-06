@@ -1,6 +1,8 @@
-package com.example.library;
+package com.example.library.backend.registration.repository;
 
 import java.util.List;
+
+import com.example.library.backend.registration.model.LibraryRegistration;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

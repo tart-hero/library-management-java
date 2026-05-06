@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.backend.registration.model;
 
 public enum ActivationNotificationStatus {
     NOT_PREPARED,

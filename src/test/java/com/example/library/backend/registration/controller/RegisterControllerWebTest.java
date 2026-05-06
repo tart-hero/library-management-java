@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.backend.registration.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -13,6 +13,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.library.LibraryApplication;
+import com.example.library.backend.registration.model.ActivationNotificationStatus;
+import com.example.library.backend.registration.model.LibraryAccountStatus;
+import com.example.library.backend.registration.model.LibraryRegistration;
+import com.example.library.backend.registration.repository.LibraryRegistrationRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +28,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
+@SpringBootTest(classes = LibraryApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class RegisterControllerWebTest {

@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.backend.registration.dto;
 
 import java.time.LocalDate;
 

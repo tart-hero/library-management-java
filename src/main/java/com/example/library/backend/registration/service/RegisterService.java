@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.backend.registration.service;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -13,6 +13,13 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+
+import com.example.library.backend.registration.dto.ActivationNotificationPreview;
+import com.example.library.backend.registration.dto.RegisterForm;
+import com.example.library.backend.registration.model.ActivationNotificationStatus;
+import com.example.library.backend.registration.model.LibraryAccountStatus;
+import com.example.library.backend.registration.model.LibraryRegistration;
+import com.example.library.backend.registration.repository.LibraryRegistrationRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
