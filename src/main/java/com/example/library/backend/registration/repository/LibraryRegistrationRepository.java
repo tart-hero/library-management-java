@@ -2,11 +2,13 @@ package com.example.library.backend.registration.repository;
 
 import java.util.List;
 
-import com.example.library.backend.registration.model.LibraryRegistration;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import com.example.library.backend.registration.model.ActivationNotificationStatus;
+import com.example.library.backend.registration.model.LibraryAccountStatus;
+import com.example.library.backend.registration.model.LibraryRegistration;
 
 public interface LibraryRegistrationRepository extends JpaRepository<LibraryRegistration, Long> {
 
@@ -25,4 +27,18 @@ public interface LibraryRegistrationRepository extends JpaRepository<LibraryRegi
             order by r.createdAt desc, r.id desc
             """)
     List<LibraryRegistration> searchArchive(@Param("keyword") String keyword);
+
+    long countByAccountStatus(LibraryAccountStatus status);
+
+    long countByActivationNotificationStatus(
+            ActivationNotificationStatus status);
+
+    @Query("""
+    SELECT MONTH(r.accountActivatedAt), COUNT(r)
+    FROM LibraryRegistration r
+    WHERE r.accountActivatedAt IS NOT NULL
+    GROUP BY MONTH(r.accountActivatedAt)
+    ORDER BY MONTH(r.accountActivatedAt)
+    """)
+    List<Object[]> countActivatedByMonth();
 }

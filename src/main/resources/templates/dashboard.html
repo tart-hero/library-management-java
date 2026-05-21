@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/registration.css}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+
+    <div class="nav-brand">
+        Library System
+    </div>
+
+    <div class="nav-links">
+        <a th:href="@{/register}">Nhập Liệu</a>
+        <a th:href="@{/registrations}">Tra Cứu</a>
+        <a th:href="@{/dashboard}">Dashboard</a>
+    </div>
+
+</nav>
+
+
+<main class="dashboard-page">
+
+    <h1>Dashboard quản lý thư viện</h1>
+
+    <section class="stats-grid">
+
+        <div class="card">
+            <h3>Tổng hồ sơ</h3>
+            <p th:text="${totalRegistrations}"></p>
+        </div>
+
+        <div class="card success">
+            <h3>Đã kích hoạt</h3>
+            <p th:text="${activatedCount}"></p>
+        </div>
+
+        <div class="card warning">
+            <h3>Chưa kích hoạt</h3>
+            <p th:text="${pendingCount}"></p>
+        </div>
+
+        <div class="card info">
+            <h3>Thông báo mail</h3>
+
+            <p th:if="${unsentMailCount > 0}">
+                Còn <span th:text="${unsentMailCount}"></span> hồ sơ chưa gửi mail
+            </p>
+
+            <p th:if="${unsentMailCount == 0}">
+                Bạn đã gửi mail cho tất cả hồ sơ
+            </p>
+        </div>
+
+    </section>
+
+    <section class="chart-section">
+
+        <h2>Số hồ sơ theo tháng</h2>
+
+        <canvas id="registrationChart"></canvas>
+
+    </section>
+
+</main>
+
+    <script th:inline="javascript">
+
+    const months = [[${months}]];
+    const counts = [[${counts}]];
+
+    const ctx = document.getElementById('registrationChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+
+        data: {
+            labels: months,
+
+            datasets: [{
+                label: 'Số hồ sơ kích hoạt',
+                data: counts
+            }]
+        },
+
+        options: {
+            responsive: true
+        }
+    });
+
+    </script>
+
+</body>
+</html>
