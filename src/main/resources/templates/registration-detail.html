@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiet ho so luu tru</title>
+    <title>Chi tiết hồ sơ lưu trữ</title>
     <link rel="stylesheet" th:href="@{/css/registration.css}">
 </head>
 <body class="registration-detail-page">
@@ -20,65 +20,64 @@
             <div>
                 <h1 th:text="${registration.name}"></h1>
                 <p class="lead">
-                    Ho so da duoc luu tai bo phan luu hanh va co the tra cuu lai bat ky luc nao
-                    trong he thong.
+                    Hồ sơ đã được lưu tại bộ phân lưu hành và có thể tra cứu lại bất kỳ lúc nào trong hệ thống.
                 </p>
 
                 <div class="archive-box">
                     <div class="archive-item">
-                        <strong>Ma luu tru</strong>
+                        <strong>Mã lưu trữ</strong>
                         <span th:text="${registration.storageCode}"></span>
                     </div>
                     <div class="archive-item">
-                        <strong>Noi luu</strong>
+                        <strong>Nơi lưu</strong>
                         <span th:text="${registration.storageLocation}"></span>
                     </div>
                     <div class="archive-item">
-                        <strong>Thoi gian luu</strong>
+                        <strong>Thời gian lưu</strong>
                         <span th:text="${#temporals.format(registration.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
                     </div>
                 </div>
 
-                <h2 class="section-title">Tai khoan thu vien</h2>
+                <h2 class="section-title">Tài khoản thư viện</h2>
                 <div class="account-grid">
                     <div class="account-item">
-                        <strong>Trang thai tai khoan</strong>
+                        <strong>Trạng thái tài khoản</strong>
                         <span class="pill" th:classappend="${registration.accountStatus.name() == 'ACTIVATED'} ? ' done' : ''"
                               th:text="${registration.accountStatusLabel}"></span>
                     </div>
                     <div class="account-item">
-                        <strong>Trang thai thong bao</strong>
+                        <strong>Trạng thái thông báo</strong>
                         <span class="pill"
                               th:classappend="${registration.activationNotificationStatus.name() == 'READY_TO_SEND'} ? ' ready' : (${registration.activationNotificationStatus.name() == 'NOTIFIED'} ? ' done' : '')"
                               th:text="${registration.activationNotificationStatusLabel}"></span>
                     </div>
                     <div class="account-item">
-                        <strong>Ten dang nhap</strong>
+                        <strong>Tên đăng nhập</strong>
                         <span th:text="${registration.libraryUsername != null ? registration.libraryUsername : 'Chua tao tai khoan'}"></span>
                     </div>
                     <div class="account-item">
-                        <strong>Han su dung</strong>
+                        <strong>Hạn sử dụng</strong>
                         <span th:text="${registration.accountExpiresAt != null ? #temporals.format(registration.accountExpiresAt, 'dd/MM/yyyy') : 'Chua ap dung'}"></span>
                     </div>
                     <div class="account-item">
-                        <strong>Thoi diem kich hoat</strong>
+                        <strong>Thời điểm kích hoạt</strong>
                         <span th:text="${registration.accountActivatedAt != null ? #temporals.format(registration.accountActivatedAt, 'dd/MM/yyyy HH:mm') : 'Chua kich hoat'}"></span>
                     </div>
                     <div class="account-item">
-                        <strong>Da thong bao luc</strong>
+                        <strong>Đã thông báo lúc</strong>
                         <span th:text="${registration.activationNotificationSentAt != null ? #temporals.format(registration.activationNotificationSentAt, 'dd/MM/yyyy HH:mm') : 'Chua ghi nhan'}"></span>
                     </div>
                 </div>
 
                 <div class="notice-card" th:if="${activationPreview != null}">
-                    <strong>Thong bao kich hoat san sang gui</strong>
-                    <div>Thong bao nay da bao gom ten dang nhap, mat khau tam thoi va han su dung tai khoan.</div>
+                    <strong>Thông báo kích hoạt sẵn sàng gửi</strong>
+                    <div>Thông báo này đã bao gồm tên đăng nhập, mật khẩu tạm thời và hạn sử dụng tài khoản.</div>
                     <pre th:text="${activationPreview.body}"></pre>
 
                     <div class="notice-actions">
-                        <a class="primary" th:href="${activationPreview.mailtoLink}">Mo ung dung email</a>
+                        <a class="primary" th:href="${activationPreview.mailtoLink}">Mở ứng dụng Email</a>
                         <form th:action="@{/registrations/{id}/confirm-notification(id=${registration.id})}" method="post">
-                            <button class="secondary" type="submit">Da gui thong bao</button>
+                            <button class="secondary" type="submit">Đã gửi thông báo</button>
                         </form>
                     </div>
                 </div>
@@ -86,44 +85,44 @@
                 <div class="notice-actions" th:if="${activationPreview == null}">
                     <form th:action="@{/registrations/{id}/activate-account(id=${registration.id})}" method="post">
                         <button class="primary" type="submit"
-                                th:text="${registration.accountStatus.name() == 'ACTIVATED'} ? 'Cap lai thong bao kich hoat' : 'Kich hoat tai khoan thu vien'"></button>
+                                th:text="${registration.accountStatus.name() == 'ACTIVATED'} ? 'Cấp lại thông báo kích hoạt' : 'Kích hoạt tài khoản thư viện'"></button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <h2 class="section-title">Thong tin dang ky</h2>
+        <h2 class="section-title">Thông tin đăng ký</h2>
         <div class="meta">
             <div class="meta-item">
-                <strong>Gioi tinh</strong>
+                <strong>Giới tính</strong>
                 <span th:text="${registration.genderLabel}"></span>
             </div>
             <div class="meta-item">
-                <strong>Ngay sinh</strong>
+                <strong>Ngày sinh</strong>
                 <span th:text="${#temporals.format(registration.dob, 'dd/MM/yyyy')}"></span>
             </div>
             <div class="meta-item">
-                <strong>Noi sinh</strong>
+                <strong>Nơi sinh</strong>
                 <span th:text="${registration.birthPlace}"></span>
             </div>
             <div class="meta-item">
-                <strong>So CCCD</strong>
+                <strong>Số CCCD</strong>
                 <span th:text="${registration.cccd}"></span>
             </div>
             <div class="meta-item">
-                <strong>Noi cap</strong>
+                <strong>Nơi cấp</strong>
                 <span th:text="${registration.issuePlace}"></span>
             </div>
             <div class="meta-item">
-                <strong>Chuyen mon</strong>
+                <strong>Chuyên môn</strong>
                 <span th:text="${registration.specialization}"></span>
             </div>
             <div class="meta-item">
-                <strong>Noi cong tac</strong>
+                <strong>Nơi công tác</strong>
                 <span th:text="${registration.workplace}"></span>
             </div>
             <div class="meta-item">
-                <strong>Dien thoai</strong>
+                <strong>Điện thoại</strong>
                 <span th:text="${registration.phone}"></span>
             </div>
             <div class="meta-item">
@@ -131,14 +130,14 @@
                 <span th:text="${registration.email}"></span>
             </div>
             <div class="meta-item">
-                <strong>Dia chi lien he</strong>
+                <strong>Địa chỉ liên hệ</strong>
                 <span th:text="${registration.address}"></span>
             </div>
         </div>
 
         <div class="actions">
-            <a class="primary" th:href="@{/registrations}">Quay lai danh sach ho so</a>
-            <a class="secondary" th:href="@{/register}">Nhap ho so moi</a>
+            <a class="primary" th:href="@{/registrations}">Quay lại danh sách hồ sơ</a>
+            <a class="secondary" th:href="@{/register}">Nhập hồ sơ mới</a>
         </div>
     </section>
 </main>

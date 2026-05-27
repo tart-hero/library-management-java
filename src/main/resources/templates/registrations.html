@@ -3,32 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luu tru ho so dang ky</title>
+    <title>Lưu trữ hồ sơ đăng ký</title>
     <link rel="stylesheet" th:href="@{/css/registration.css}">
 </head>
 <body class="registrations-page">
 <main class="page">
     <header class="header">
-        <h1>Luu tru ho so dang ky</h1>
+        <h1>Lưu trữ hồ sơ đăng ký</h1>
         <p>
-            Chuyen vien luu hanh co the sap xep, tim kiem, kich hoat tai khoan thu vien va
-            ghi nhan viec thong bao kich hoat cho ban doc ngay trong danh sach ho so da luu.
+            Chuyên viên lưu hành có thể sắp xếp, tìm kiếm, kích hoạt tài khoản thư viện và
+            ghi nhận việc thông báo kích hoạt cho bạn đọc ngay trong danh sách hồ sơ đã lưu.
         </p>
     </header>
 
     <section class="toolbar">
         <form class="search-form" th:action="@{/registrations}" method="get">
-            <input type="search" name="q" th:value="${searchTerm}" placeholder="Tim theo ho ten, email, CCCD, ma luu tru hoac ten dang nhap">
-            <button type="submit">Tim kiem</button>
-            <a class="link-button secondary" th:href="@{/register}">Nhap ho so moi</a>
+            <input type="search" name="q" th:value="${searchTerm}" placeholder="Tìm theo họ tên, email, CCCD, mã lưu trữ hoạc tên đăng nhập">
+            <button type="submit">Tìm kiếm</button>
+            <a class="link-button secondary" th:href="@{/register}">Nhập hồ sơ mới</a>
         </form>
 
         <div class="toolbar-footer">
-            <span th:if="${#strings.isEmpty(searchTerm)}">Tong ho so da luu: <strong th:text="${#lists.size(registrations)}"></strong></span>
+            <span th:if="${#strings.isEmpty(searchTerm)}">Tổng hồ sơ đã lưu<ul></ul>: <strong th:text="${#lists.size(registrations)}"></strong></span>
             <span th:unless="${#strings.isEmpty(searchTerm)}">
-                Ket qua cho tu khoa "<strong th:text="${searchTerm}"></strong>": <strong th:text="${#lists.size(registrations)}"></strong>
+                Kết quả cho từ khóa "<strong th:text="${searchTerm}"></strong>": <strong th:text="${#lists.size(registrations)}"></strong>
             </span>
-            <span>Noi luu mac dinh: Bo phan luu hanh</span>
+            <span>Nơi lưu mặc định: Bộ phận lưu hành</span>
         </div>
     </section>
 
@@ -36,13 +36,13 @@
         <table>
             <thead>
             <tr>
-                <th>Ma luu tru</th>
-                <th>Ho va ten</th>
-                <th>Thong tin lien he</th>
-                <th>Tai khoan TV</th>
-                <th>Thong bao kich hoat</th>
-                <th>Thoi gian luu</th>
-                <th>Thao tac</th>
+                <th>Mã lưu trữ</th>
+                <th>Họ và tên</th>
+                <th>Thông tin liên hệ</th>
+                <th>Tài khoản TV</th>
+                <th>Thông báo kích hoạt</th>
+                <th>Thời gian lưu</th>
+                <th>Thao tác</th>
             </tr>
             </thead>
             <tbody>
@@ -58,7 +58,7 @@
                 </td>
                 <td>
                     <div><span class="pill" th:classappend="${registration.accountStatus.name() == 'ACTIVATED'} ? ' done' : ''" th:text="${registration.accountStatusLabel}"></span></div>
-                    <div th:text="${registration.libraryUsername != null ? registration.libraryUsername : 'Chua tao'}"></div>
+                    <div th:text="${registration.libraryUsername != null ? registration.libraryUsername : 'Chưa tạo'}"></div>
                 </td>
                 <td>
                     <div>
@@ -66,11 +66,11 @@
                               th:classappend="${registration.activationNotificationStatus.name() == 'READY_TO_SEND'} ? ' ready' : (${registration.activationNotificationStatus.name() == 'NOTIFIED'} ? ' done' : '')"
                               th:text="${registration.activationNotificationStatusLabel}"></span>
                     </div>
-                    <div th:text="${registration.activationNotificationPreparedAt != null ? #temporals.format(registration.activationNotificationPreparedAt, 'dd/MM/yyyy HH:mm') : 'Chua soan'}"></div>
+                    <div th:text="${registration.activationNotificationPreparedAt != null ? #temporals.format(registration.activationNotificationPreparedAt, 'dd/MM/yyyy HH:mm') : 'Chưa soạn'}"></div>
                 </td>
                 <td th:text="${#temporals.format(registration.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
                 <td>
-                    <a class="link-button secondary" th:href="@{/registrations/{id}(id=${registration.id})}">Xu ly ho so</a>
+                    <a class="link-button secondary" th:href="@{/registrations/{id}(id=${registration.id})}">Xử lý hồ sơ</a>
                 </td>
             </tr>
             </tbody>
@@ -78,8 +78,8 @@
     </section>
 
     <section class="table-card empty" th:if="${#lists.isEmpty(registrations)}">
-        <strong>Chua tim thay ho so phu hop</strong>
-        <span>Thu thay doi tu khoa tim kiem hoac tao moi ho so dang ky.</span>
+        <strong>Chưa tìm thấy hồ sơ phù hợp</strong>
+        <span>Thử thay đổi từ khóa tìm kiếm hoặc tạo mới hồ sơ đăng ký.</span>
     </section>
 </main>
 </body>

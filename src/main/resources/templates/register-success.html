@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ho so da duoc luu</title>
+    <title>Hồ sơ đã được lưu</title>
     <link rel="stylesheet" th:href="@{/css/registration.css}">
 </head>
 <body class="register-success-page">
 <main class="page">
     <section class="card">
-        <h1>Ho so da duoc luu thanh cong</h1>
-        <p class="lead">Thong tin dang ky da duoc ghi vao he thong va san sang cho cac buoc xu ly tiep theo.</p>
-        <p class="note">Buoc tiep theo cua FR-08 la kich hoat tai khoan thu vien va soan thong bao kich hoat tu trang chi tiet ho so.</p>
+        <h1>Hồ sơ đã được lưu thành công</h1>
+        <p class="lead">Thông tin đăng ký đã được ghi vào hệ thống và sẵn sàng cho các bước xử lý tiếp theo.</p>
+        <p class="note">Bước tiếp theo của FR-08 là kích hoạt tài khoản thư viện và soạn thảo thông báo kích hoạt từ trang chi tiết hồ sơ.</p>
 
         <div class="summary">
             <div class="avatar">
-                <img th:src="@{/register/avatar/{id}(id=${registration.id})}" alt="Anh nguoi dang ky">
+                <img th:src="@{/register/avatar/{id}(id=${registration.id})}" alt="Ảnh người đăng ký">
             </div>
 
             <div class="meta">
@@ -24,27 +24,27 @@
                     <span th:text="${registration.id}"></span>
                 </div>
                 <div class="meta-item">
-                    <strong>Thoi gian luu</strong>
+                    <strong>Thời gian lưu</strong>
                     <span th:text="${#temporals.format(registration.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
                 </div>
                 <div class="meta-item">
-                    <strong>Ho va ten</strong>
+                    <strong>Họ và tên</strong>
                     <span th:text="${registration.name}"></span>
                 </div>
                 <div class="meta-item">
-                    <strong>Gioi tinh</strong>
+                    <strong>Giới tính</strong>
                     <span th:text="${registration.genderLabel}"></span>
                 </div>
                 <div class="meta-item">
-                    <strong>Ngay sinh</strong>
+                    <strong>Ngày sinh</strong>
                     <span th:text="${#temporals.format(registration.dob, 'dd/MM/yyyy')}"></span>
                 </div>
                 <div class="meta-item">
-                    <strong>Noi sinh</strong>
+                    <strong>Nơi sinh</strong>
                     <span th:text="${registration.birthPlace}"></span>
                 </div>
                 <div class="meta-item">
-                    <strong>So CCCD</strong>
+                    <strong>Số CCCS</strong>
                     <span th:text="${registration.cccd}"></span>
                 </div>
                 <div class="meta-item">
@@ -52,25 +52,25 @@
                     <span th:text="${registration.email}"></span>
                 </div>
                 <div class="meta-item">
-                    <strong>Ma luu tru</strong>
+                    <strong>Mã lưu trữ</strong>
                     <span th:text="${registration.storageCode}"></span>
                 </div>
                 <div class="meta-item">
-                    <strong>Trang thai tai khoan TV</strong>
+                    <strong>Trạng thái tài khoản TV</strong>
                     <span th:text="${registration.accountStatusLabel}"></span>
                 </div>
                 <div class="meta-item full">
-                    <strong>Dia chi lien he</strong>
+                    <strong>Địa chỉ liên hệ</strong>
                     <span th:text="${registration.address}"></span>
                 </div>
             </div>
         </div>
 
         <div class="actions">
-            <a class="primary" th:href="@{/register}">Nhap ho so moi</a>
-            <a class="secondary" th:href="@{/registrations/{id}(id=${registration.id})}">Xu ly FR-08 tren ho so nay</a>
-            <a class="secondary" th:href="@{/registrations}">Danh sach ho so</a>
-            <a class="secondary" th:href="@{/h2-console}" target="_blank" rel="noopener noreferrer">Mo H2 Console</a>
+            <a class="primary" th:href="@{/register}">Nhập hồ sơ mới</a>
+            <a class="secondary" th:href="@{/registrations/{id}(id=${registration.id})}">Xử lý FR-08 trên hồ sơ này</a>
+            <a class="secondary" th:href="@{/registrations}">Danh sách hồ sơ</a>
+            <a class="secondary" th:href="@{/h2-console}" target="_blank" rel="noopener noreferrer">Mở H2 Console</a>
         </div>
     </section>
 </main>

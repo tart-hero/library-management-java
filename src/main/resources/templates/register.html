@@ -3,85 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phieu dang ky tai khoan thu vien</title>
+    <title>Phiếu đăng ký tài khoản thư viện</title>
     <link rel="stylesheet" th:href="@{/css/registration.css}">
 </head>
 <body class="register-page">
 <main class="page">
     <section class="card">
         <div class="header">
-            <p>FR07 - Nhap lieu</p>
-            <h1>Phieu dang ky tai khoan thu vien</h1>
-            <span>Man hinh nay danh cho chuyen vien luu hanh de tiep nhan va luu ho so dang ky vao he thong.</span>
+            <p>FR07 - Nhạp liệu</p>
+            <h1>Phiếu đăng ký Tài khoản thư viện</h1>
+            <span>Màn hình này dành cho chuyên viên lưu hành để tiếp nhận và lưu hồ sơ đăng ký vào hệ thống.</span>
         </div>
 
         <form th:action="@{/register}" th:object="${registerForm}" method="post" enctype="multipart/form-data">
             <div class="error-summary" th:if="${#fields.hasAnyErrors()}">
-                Vui long kiem tra lai cac truong du lieu truoc khi luu ho so.
+                Vui lòng kiểm tra lại các trường dữ liệu trước khi lưu hồ sơ.
             </div>
 
             <div class="grid">
                 <div class="field">
-                    <label for="name">Ho va ten</label>
+                    <label for="name">Họ và tên</label>
                     <input id="name" type="text" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'field-error-input'">
                     <div class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                 </div>
 
                 <div class="field">
-                    <label for="gender">Gioi tinh</label>
+                    <label for="gender">Giới tính</label>
                     <select id="gender" th:field="*{gender}" th:classappend="${#fields.hasErrors('gender')} ? 'field-error-input'">
-                        <option value="">-- Chon gioi tinh --</option>
+                        <option value="">-- Chọn giới tính --</option>
                         <option value="male">Nam</option>
-                        <option value="female">Nu</option>
-                        <option value="other">Khac</option>
+                        <option value="female">Nữ</option>
+                        <option value="other">Khác</option>
                     </select>
                     <div class="field-error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
                 </div>
 
                 <div class="field">
-                    <label for="dob">Ngay thang nam sinh</label>
+                    <label for="dob">Ngày tháng năm sinh</label>
                     <input id="dob" type="date" th:field="*{dob}" th:classappend="${#fields.hasErrors('dob')} ? 'field-error-input'">
                     <div class="field-error" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}"></div>
                 </div>
 
                 <div class="field">
-                    <label for="birthPlace">Noi sinh</label>
+                    <label for="birthPlace">Nơi sinh</label>
                     <input id="birthPlace" type="text" th:field="*{birthPlace}" th:classappend="${#fields.hasErrors('birthPlace')} ? 'field-error-input'">
                     <div class="field-error" th:if="${#fields.hasErrors('birthPlace')}" th:errors="*{birthPlace}"></div>
                 </div>
 
                 <div class="field">
-                    <label for="cccd">So CCCD</label>
+                    <label for="cccd">Số CCCD</label>
                     <input id="cccd" type="text" inputmode="numeric" th:field="*{cccd}" th:classappend="${#fields.hasErrors('cccd')} ? 'field-error-input'">
                     <div class="field-error" th:if="${#fields.hasErrors('cccd')}" th:errors="*{cccd}"></div>
                 </div>
 
                 <div class="field">
-                    <label for="issuePlace">Noi cap</label>
+                    <label for="issuePlace">Nơi cấp</label>
                     <input id="issuePlace" type="text" th:field="*{issuePlace}" th:classappend="${#fields.hasErrors('issuePlace')} ? 'field-error-input'">
                     <div class="field-error" th:if="${#fields.hasErrors('issuePlace')}" th:errors="*{issuePlace}"></div>
                 </div>
 
                 <div class="field">
-                    <label for="specialization">Chuyen mon</label>
+                    <label for="specialization">Chuyên môn</label>
                     <input id="specialization" type="text" th:field="*{specialization}" th:classappend="${#fields.hasErrors('specialization')} ? 'field-error-input'">
                     <div class="field-error" th:if="${#fields.hasErrors('specialization')}" th:errors="*{specialization}"></div>
                 </div>
 
                 <div class="field">
-                    <label for="workplace">Noi cong tac</label>
+                    <label for="workplace">Nơi công tác</label>
                     <input id="workplace" type="text" th:field="*{workplace}" th:classappend="${#fields.hasErrors('workplace')} ? 'field-error-input'">
                     <div class="field-error" th:if="${#fields.hasErrors('workplace')}" th:errors="*{workplace}"></div>
                 </div>
 
                 <div class="field full">
-                    <label for="address">Dia chi lien he</label>
+                    <label for="address">Địa chỉ liên hệ</label>
                     <input id="address" type="text" th:field="*{address}" th:classappend="${#fields.hasErrors('address')} ? 'field-error-input'">
                     <div class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
                 </div>
 
                 <div class="field">
-                    <label for="phone">Dien thoai lien he</label>
+                    <label for="phone">Điện thoại liên hệ</label>
                     <input id="phone" type="tel" th:field="*{phone}" th:classappend="${#fields.hasErrors('phone')} ? 'field-error-input'">
                     <div class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
                 </div>
@@ -93,17 +93,17 @@
                 </div>
 
                 <div class="field full">
-                    <label for="avatar">Anh nguoi dang ky</label>
-                    <div class="hint">Chap nhan tep hinh anh, dung luong toi da 5MB.</div>
+                    <label for="avatar">Ảnh người đăng ký</label>
+                    <div class="hint">Chấp nhận tệp hình ảnh, dung lượng tối đa 5MB.</div>
                     <input id="avatar" type="file" name="avatar" accept="image/*" th:classappend="${#fields.hasErrors('avatar')} ? 'field-error-input'">
                     <div class="field-error" th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}"></div>
                 </div>
             </div>
 
             <div class="actions">
-                <button type="submit">Luu ho so dang ky</button>
-                <a class="link-button" th:href="@{/registrations}">Tra cuu ho so da luu</a>
-                <span class="note">Thong tin se duoc ghi nhan vao he thong de phuc vu cac buoc xu ly tiep theo.</span>
+                <button type="submit">Lưu hồ sơ đăng ký</button>
+                <a class="link-button" th:href="@{/registrations}">Tra cứu hồ sơ đã đăng ký</a>
+                <span class="note">Thông tin sẽ được ghi nhận vào hệ thống để phục vụ các bước xử lý tiếp theo.</span>
             </div>
         </form>
     </section>
