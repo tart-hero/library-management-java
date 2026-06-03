@@ -4,7 +4,7 @@
 
 body {
     margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: "Segoe UI", "Arial", "Helvetica Neue", sans-serif;
     background: var(--page-bg);
     color: var(--text);
 }
