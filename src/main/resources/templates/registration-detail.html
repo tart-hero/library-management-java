@@ -12,6 +12,13 @@
         <div th:if="${statusMessage}" class="alert success" th:text="${statusMessage}"></div>
         <div th:if="${errorMessage}" class="alert error" th:text="${errorMessage}"></div>
 
+        <div class="detail-topbar">
+            <a class="secondary" th:href="@{/registrations}">Danh sách hồ sơ</a>
+            <form class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit">Đăng xuất</button>
+            </form>
+        </div>
+
         <div class="hero">
             <div>
                 <img th:src="@{/register/avatar/{id}(id=${registration.id})}" alt="Anh nguoi dang ky">

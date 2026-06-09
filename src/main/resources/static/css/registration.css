@@ -63,6 +63,19 @@ body {
     --pill-text: #5b3f83;
 }
 
+.login-page {
+    --page-bg: #f3f5f7;
+    --text: #1e2933;
+    --muted: #5b6770;
+    --accent: #244d6e;
+    --border: #d7dee4;
+    --input-border: #c7d0d8;
+    --surface: rgba(255, 255, 255, 0.96);
+    --surface-muted: #f6f9fb;
+    --shadow: 0 16px 40px rgba(49, 74, 94, 0.1);
+    --page-width: 720px;
+}
+
 .page {
     max-width: var(--page-width);
     margin: 0 auto;
@@ -87,19 +100,34 @@ body {
     overflow: hidden;
 }
 
+.login-card {
+    max-width: 560px;
+    margin: 48px auto 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 .register-page .header {
     padding: 24px 28px;
     background: var(--surface-muted);
     border-bottom: 1px solid var(--border);
 }
 
+.login-page .header {
+    padding: 24px 28px;
+    background: var(--surface-muted);
+    border-bottom: 1px solid var(--border);
+}
+
 .register-page .header p,
-.registrations-page .header p {
+.registrations-page .header p,
+.login-page .header p {
     margin: 0;
     line-height: 1.6;
 }
 
-.register-page .header p {
+.register-page .header p,
+.login-page .header p {
     margin-bottom: 8px;
     font-size: 0.9rem;
     letter-spacing: 0.06em;
@@ -109,7 +137,8 @@ body {
 }
 
 .register-page .header h1,
-.registrations-page .header h1 {
+.registrations-page .header h1,
+.login-page .header h1 {
     margin: 0 0 8px;
     font-size: 2.4rem;
 }
@@ -119,7 +148,8 @@ body {
     font-size: 2.3rem;
 }
 
-.register-page .header span {
+.register-page .header span,
+.login-page .header span {
     display: block;
     margin-top: 10px;
     color: var(--muted);
@@ -128,6 +158,13 @@ body {
 
 .registrations-page .header {
     margin-bottom: 22px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
 }
 
 .registrations-page .header p {
@@ -154,6 +191,10 @@ h1 {
     padding: 24px 28px 32px;
 }
 
+.login-page form {
+    padding: 24px 28px 32px;
+}
+
 .registration-detail-page form {
     margin: 0;
 }
@@ -173,6 +214,10 @@ h1 {
     gap: 18px 20px;
 }
 
+.grid.single {
+    grid-template-columns: 1fr;
+}
+
 .field {
     display: flex;
     flex-direction: column;
@@ -189,6 +234,7 @@ label {
 
 .register-page input,
 .register-page select,
+.login-page input,
 .registrations-page input[type="search"] {
     width: 100%;
     padding: 12px 14px;
@@ -266,6 +312,7 @@ button {
 }
 
 .register-page button,
+.login-page button,
 .registrations-page button,
 .registrations-page .link-button {
     min-height: 48px;
@@ -273,6 +320,7 @@ button {
 }
 
 .register-page button,
+.login-page button,
 .registrations-page button,
 .primary {
     background: var(--accent);
@@ -281,6 +329,16 @@ button {
 
 .link-button,
 .secondary {
+    background: #fff;
+    color: var(--accent);
+    border: 1px solid var(--input-border, var(--border));
+}
+
+.logout-form {
+    margin: 0;
+}
+
+.logout-form button {
     background: #fff;
     color: var(--accent);
     border: 1px solid var(--input-border, var(--border));
@@ -359,6 +417,14 @@ button {
     display: grid;
     grid-template-columns: minmax(220px, 300px) 1fr;
     gap: 24px;
+}
+
+.detail-topbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 .section-title {
@@ -540,7 +606,13 @@ tr:last-child td {
     }
 
     .register-page .header,
-    .register-page form {
+    .register-page form,
+    .login-page .header,
+    .login-page form {
         padding: 20px 18px;
+    }
+
+    .admin-header {
+        flex-direction: column;
     }
 }

@@ -10,9 +10,9 @@
 <main class="page">
     <section class="card">
         <div class="header">
-            <p>FR07 - Nhạp liệu</p>
+            <p>Phiếu đăng ký bạn đọc</p>
             <h1>Phiếu đăng ký Tài khoản thư viện</h1>
-            <span>Màn hình này dành cho chuyên viên lưu hành để tiếp nhận và lưu hồ sơ đăng ký vào hệ thống.</span>
+            <span>Vui lòng nhập thông tin đăng ký. Chuyên viên thư viện sẽ xét duyệt, cấp tài khoản và gửi email kích hoạt sau khi hồ sơ hợp lệ.</span>
         </div>
 
         <form th:action="@{/register}" th:object="${registerForm}" method="post" enctype="multipart/form-data">
@@ -101,9 +101,9 @@
             </div>
 
             <div class="actions">
-                <button type="submit">Lưu hồ sơ đăng ký</button>
-                <a class="link-button" th:href="@{/registrations}">Tra cứu hồ sơ đã đăng ký</a>
-                <span class="note">Thông tin sẽ được ghi nhận vào hệ thống để phục vụ các bước xử lý tiếp theo.</span>
+                <button type="submit">Gửi phiếu đăng ký</button>
+                <a class="link-button" th:href="@{/login}">Đăng nhập chuyên viên</a>
+                <span class="note">Bạn đọc chỉ có thể gửi phiếu đăng ký; kho hồ sơ và thao tác xét-cấp tài khoản chỉ dành cho chuyên viên thư viện.</span>
             </div>
         </form>
     </section>

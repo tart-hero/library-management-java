@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>&#272;&#259;ng nh&#7853;p chuy&#234;n vi&#234;n th&#432; vi&#7879;n</title>
+    <link rel="stylesheet" th:href="@{/css/registration.css}">
+</head>
+<body class="login-page">
+<main class="page">
+    <section class="card login-card">
+        <div class="header">
+            <p>Khu v&#7921;c chuy&#234;n vi&#234;n</p>
+            <h1>&#272;&#259;ng nh&#7853;p h&#7879; th&#7889;ng</h1>
+            <span>Ch&#7881; chuy&#234;n vi&#234;n th&#432; vi&#7879;n &#273;&#432;&#7907;c truy c&#7853;p kho h&#7891; s&#417;, k&#237;ch ho&#7841;t t&#224;i kho&#7843;n v&#224; g&#7917;i email th&#244;ng b&#225;o.</span>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div th:if="${param.error}" class="alert error">
+                T&#234;n &#273;&#259;ng nh&#7853;p ho&#7863;c m&#7853;t kh&#7849;u kh&#244;ng &#273;&#250;ng.
+            </div>
+            <div th:if="${param.logout}" class="alert success">
+                B&#7841;n &#273;&#227; &#273;&#259;ng xu&#7845;t kh&#7887;i h&#7879; th&#7889;ng.
+            </div>
+
+            <div class="grid single">
+                <div class="field">
+                    <label for="username">T&#234;n &#273;&#259;ng nh&#7853;p</label>
+                    <input id="username" name="username" type="text" autocomplete="username" autofocus>
+                </div>
+
+                <div class="field">
+                    <label for="password">M&#7853;t kh&#7849;u</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit">&#272;&#259;ng nh&#7853;p</button>
+                <a class="link-button" th:href="@{/register}">Quay l&#7841;i phi&#7871;u &#273;&#259;ng k&#253;</a>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>

@@ -54,8 +54,8 @@ public class RegisterController {
         }
 
         try {
-            LibraryRegistration registration = registerService.saveRegistration(form);
-            return "redirect:/register/success/" + registration.getId();
+            registerService.saveRegistration(form);
+            return "redirect:/register/success";
         } catch (IOException ex) {
             bindingResult.rejectValue("avatar", "avatar.upload", "Khong the luu anh dang ky. Vui long thu lai.");
             model.addAttribute("registerForm", form);
@@ -63,9 +63,8 @@ public class RegisterController {
         }
     }
 
-    @GetMapping("/register/success/{id}")
-    public String showSuccess(@PathVariable Long id, Model model) {
-        model.addAttribute("registration", registerService.getRegistration(id));
+    @GetMapping("/register/success")
+    public String showSuccess() {
         return "register-success";
     }
 
