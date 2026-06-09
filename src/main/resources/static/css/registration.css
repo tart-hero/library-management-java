@@ -372,6 +372,24 @@ button {
     border-color: #d7e0ff;
 }
 
+.email-preview-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.email-preview-meta div {
+    padding: 12px 14px;
+    border: 1px solid #d7e0ff;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.email-preview-meta span {
+    word-break: break-word;
+}
+
 .notice-card pre {
     margin: 12px 0 0;
     padding: 14px;
@@ -508,6 +526,7 @@ tr:last-child td {
     .hero,
     .archive-box,
     .account-grid,
+    .email-preview-meta,
     .registration-detail-page .meta {
         grid-template-columns: 1fr;
     }

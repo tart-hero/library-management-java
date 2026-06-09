@@ -93,20 +93,20 @@ public class RegisterController {
             registerService.activateLibraryAccount(id);
             redirectAttributes.addFlashAttribute(
                     "statusMessage",
-                    "Tai khoan thu vien da duoc kich hoat. Thong bao kich hoat da san sang de gui.");
+                    "Tài khoản thư viện đã được kích hoạt. Thông báo kích hoạt đã sẵn sàng để gửi qua SMTP.");
         } catch (IllegalArgumentException | IllegalStateException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         }
         return "redirect:/registrations/" + id;
     }
 
-    @PostMapping("/registrations/{id}/confirm-notification")
-    public String confirmNotificationSent(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    @PostMapping("/registrations/{id}/send-notification")
+    public String sendNotification(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            registerService.confirmActivationNotificationSent(id);
+            registerService.sendActivationNotification(id);
             redirectAttributes.addFlashAttribute(
                     "statusMessage",
-                    "Da ghi nhan viec thong bao kich hoat tai khoan thu vien cho ban doc.");
+                    "Email kích hoạt tài khoản thư viện đã được gửi thành công.");
         } catch (IllegalArgumentException | IllegalStateException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         }

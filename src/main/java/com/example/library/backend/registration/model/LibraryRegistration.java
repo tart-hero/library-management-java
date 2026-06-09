@@ -204,29 +204,29 @@ public class LibraryRegistration {
     public String getGenderLabel() {
         return switch (gender) {
             case "male" -> "Nam";
-            case "female" -> "Nu";
-            default -> "Khac";
+            case "female" -> "Nữ";
+            default -> "Khác";
         };
     }
 
     public String getAccountStatusLabel() {
         if (accountStatus == null) {
-            return "Chua kich hoat";
+            return "Chưa kích hoạt";
         }
         return switch (accountStatus) {
-            case ACTIVATED -> "Da kich hoat";
-            case PENDING_ACTIVATION -> "Chua kich hoat";
+            case ACTIVATED -> "Đã kích hoạt";
+            case PENDING_ACTIVATION -> "Chưa kích hoạt";
         };
     }
 
     public String getActivationNotificationStatusLabel() {
         if (activationNotificationStatus == null) {
-            return "Chua soan thong bao";
+            return "Chưa soạn thông báo";
         }
         return switch (activationNotificationStatus) {
-            case READY_TO_SEND -> "Cho gui thong bao";
-            case NOTIFIED -> "Da thong bao";
-            case NOT_PREPARED -> "Chua soan thong bao";
+            case READY_TO_SEND -> "Chờ gửi thông báo";
+            case NOTIFIED -> "Đã thông báo";
+            case NOT_PREPARED -> "Chưa soạn thông báo";
         };
     }
 

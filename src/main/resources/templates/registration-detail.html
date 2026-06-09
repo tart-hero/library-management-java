@@ -53,31 +53,40 @@
                     </div>
                     <div class="account-item">
                         <strong>Tên đăng nhập</strong>
-                        <span th:text="${registration.libraryUsername != null ? registration.libraryUsername : 'Chua tao tai khoan'}"></span>
+                        <span th:text="${registration.libraryUsername != null ? registration.libraryUsername : 'Chưa tạo tài khoản'}"></span>
                     </div>
                     <div class="account-item">
                         <strong>Hạn sử dụng</strong>
-                        <span th:text="${registration.accountExpiresAt != null ? #temporals.format(registration.accountExpiresAt, 'dd/MM/yyyy') : 'Chua ap dung'}"></span>
+                        <span th:text="${registration.accountExpiresAt != null ? #temporals.format(registration.accountExpiresAt, 'dd/MM/yyyy') : 'Chưa áp dụng'}"></span>
                     </div>
                     <div class="account-item">
                         <strong>Thời điểm kích hoạt</strong>
-                        <span th:text="${registration.accountActivatedAt != null ? #temporals.format(registration.accountActivatedAt, 'dd/MM/yyyy HH:mm') : 'Chua kich hoat'}"></span>
+                        <span th:text="${registration.accountActivatedAt != null ? #temporals.format(registration.accountActivatedAt, 'dd/MM/yyyy HH:mm') : 'Chưa kích hoạt'}"></span>
                     </div>
                     <div class="account-item">
                         <strong>Đã thông báo lúc</strong>
-                        <span th:text="${registration.activationNotificationSentAt != null ? #temporals.format(registration.activationNotificationSentAt, 'dd/MM/yyyy HH:mm') : 'Chua ghi nhan'}"></span>
+                        <span th:text="${registration.activationNotificationSentAt != null ? #temporals.format(registration.activationNotificationSentAt, 'dd/MM/yyyy HH:mm') : 'Chưa ghi nhận'}"></span>
                     </div>
                 </div>
 
                 <div class="notice-card" th:if="${activationPreview != null}">
-                    <strong>Thông báo kích hoạt sẵn sàng gửi</strong>
-                    <div>Thông báo này đã bao gồm tên đăng nhập, mật khẩu tạm thời và hạn sử dụng tài khoản.</div>
+                    <strong>Thông báo kích hoạt sẵn sàng gửi qua SMTP</strong>
+                    <div>Kiểm tra nội dung dưới đây trước khi gửi email kích hoạt cho bạn đọc.</div>
+                    <div class="email-preview-meta">
+                        <div>
+                            <strong>Người nhận</strong>
+                            <span th:text="${activationPreview.recipientEmail}"></span>
+                        </div>
+                        <div>
+                            <strong>Tiêu đề</strong>
+                            <span th:text="${activationPreview.subject}"></span>
+                        </div>
+                    </div>
                     <pre th:text="${activationPreview.body}"></pre>
 
                     <div class="notice-actions">
-                        <a class="primary" th:href="${activationPreview.mailtoLink}">Mở ứng dụng Email</a>
-                        <form th:action="@{/registrations/{id}/confirm-notification(id=${registration.id})}" method="post">
-                            <button class="secondary" type="submit">Đã gửi thông báo</button>
+                        <form th:action="@{/registrations/{id}/send-notification(id=${registration.id})}" method="post">
+                            <button class="primary" type="submit">Gửi email kích hoạt</button>
                         </form>
                     </div>
                 </div>

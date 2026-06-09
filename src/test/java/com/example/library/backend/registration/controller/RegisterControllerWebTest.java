@@ -9,9 +9,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Properties;
 
 import com.example.library.LibraryApplication;
 import com.example.library.backend.registration.model.ActivationNotificationStatus;
@@ -24,9 +28,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 
 @SpringBootTest(classes = LibraryApplication.class)
 @AutoConfigureMockMvc
@@ -38,6 +47,9 @@ class RegisterControllerWebTest {
 
     @Autowired
     private LibraryRegistrationRepository registrationRepository;
+
+    @MockitoBean
+    private JavaMailSender mailSender;
 
     @BeforeEach
     void cleanDatabase() {
@@ -97,9 +109,9 @@ class RegisterControllerWebTest {
         mockMvc.perform(get("/register/success/{id}", saved.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("register-success"))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Ho so da duoc luu thanh cong")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Hồ sơ đã được lưu thành công")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Do Anh Thu")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Chua kich hoat")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Chưa kích hoạt")));
     }
 
     @Test
@@ -186,12 +198,13 @@ class RegisterControllerWebTest {
 
         mockMvc.perform(get("/registrations/{id}", saved.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Thong bao kich hoat san sang gui")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Thông báo kích hoạt sẵn sàng gửi qua SMTP")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Kính gửi anh/chị Pham Thu Trang")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("trang@example.com")));
     }
 
     @Test
-    void confirmNotificationMarksActivationAsCompleted() throws Exception {
+    void sendNotificationMarksActivationAsCompleted() throws Exception {
         LibraryRegistration saved = createRegistration(
                 "Vo Minh Chau",
                 "chau@example.com",
@@ -206,13 +219,16 @@ class RegisterControllerWebTest {
         saved.setActivationNotificationPreparedAt(LocalDateTime.of(2026, 4, 2, 12, 10));
         saved = registrationRepository.save(saved);
 
-        mockMvc.perform(post("/registrations/{id}/confirm-notification", saved.getId()))
+        when(mailSender.createMimeMessage()).thenReturn(new MimeMessage(Session.getInstance(new Properties())));
+
+        mockMvc.perform(post("/registrations/{id}/send-notification", saved.getId()))
                 .andExpect(status().is3xxRedirection());
 
         LibraryRegistration updated = registrationRepository.findById(saved.getId()).orElseThrow();
         assertThat(updated.getActivationNotificationStatus()).isEqualTo(ActivationNotificationStatus.NOTIFIED);
         assertThat(updated.getActivationNotificationSentAt()).isNotNull();
         assertThat(updated.getNotificationPasswordPlaintext()).isNull();
+        verify(mailSender).send(any(MimeMessage.class));
     }
 
     private LibraryRegistration createRegistration(
