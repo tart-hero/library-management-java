@@ -1,7 +1,6 @@
 package com.example.library.backend.registration.service;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,14 +29,19 @@ public class RegisterService {
 
     private static final String STORAGE_LOCATION = "Bo phan Luu hanh";
     private static final DateTimeFormatter STORAGE_CODE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final char[] TEMP_PASSWORD_CHARS =
             "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789".toCharArray();
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     private final LibraryRegistrationRepository registrationRepository;
+    private final ActivationNotificationMailService activationNotificationMailService;
 
-    public RegisterService(LibraryRegistrationRepository registrationRepository) {
+    public RegisterService(
+            LibraryRegistrationRepository registrationRepository,
+            ActivationNotificationMailService activationNotificationMailService) {
         this.registrationRepository = registrationRepository;
+        this.activationNotificationMailService = activationNotificationMailService;
     }
 
     @Transactional
@@ -110,11 +114,17 @@ public class RegisterService {
     }
 
     @Transactional
-    public LibraryRegistration confirmActivationNotificationSent(Long id) {
+    public LibraryRegistration sendActivationNotification(Long id) {
         LibraryRegistration registration = getRegistration(id);
         if (!registration.isNotificationReadyToSend()) {
-            throw new IllegalStateException("Ho so nay chua co thong bao kich hoat san sang de gui.");
+            throw new IllegalStateException("Hồ sơ này chưa có thông báo kích hoạt sẵn sàng để gửi.");
         }
+
+        ActivationNotificationPreview preview = buildActivationNotificationPreview(registration);
+        activationNotificationMailService.sendActivationNotification(
+                registration.getEmail(),
+                preview.subject(),
+                preview.body());
 
         registration.setActivationNotificationStatus(ActivationNotificationStatus.NOTIFIED);
         registration.setActivationNotificationSentAt(LocalDateTime.now());
@@ -128,33 +138,30 @@ public class RegisterService {
             return null;
         }
 
-        String subject = "Thong bao kich hoat tai khoan thu vien";
+        String subject = "Thông báo kích hoạt tài khoản thư viện";
         String body = """
-                Kinh gui %s,
+                Kính gửi anh/chị %s,
 
-                Tai khoan thu vien cua ban da duoc kich hoat.
+                Bộ phận Lưu hành Thư viện thông báo tài khoản thư viện của anh/chị đã được kích hoạt.
 
-                Ten dang nhap: %s
-                Mat khau tam thoi: %s
-                Han su dung tai khoan: %s
-                Ma ho so: %s
+                Thông tin đăng nhập:
+                - Tên đăng nhập: %s
+                - Mật khẩu tạm thời: %s
+                - Hạn sử dụng tài khoản: %s
+                - Mã hồ sơ: %s
 
-                Vui long doi mat khau sau lan dang nhap dau tien.
+                Vui lòng đăng nhập và đổi mật khẩu ngay trong lần sử dụng đầu tiên. Không chia sẻ mật khẩu này với người khác.
 
-                Tran trong,
-                Bo phan Luu hanh Thu vien
+                Trân trọng,
+                Bộ phận Lưu hành Thư viện
                 """.formatted(
                 registration.getName(),
                 registration.getLibraryUsername(),
                 registration.getNotificationPasswordPlaintext(),
-                DateTimeFormatter.ofPattern("dd/MM/yyyy").format(registration.getAccountExpiresAt()),
+                formatDisplayDate(registration.getAccountExpiresAt()),
                 registration.getStorageCode());
 
-        String mailtoLink = "mailto:" + urlEncode(registration.getEmail())
-                + "?subject=" + urlEncode(subject)
-                + "&body=" + urlEncode(body);
-
-        return new ActivationNotificationPreview(subject, body, mailtoLink);
+        return new ActivationNotificationPreview(registration.getEmail(), subject, body);
     }
 
     private String generateStorageCode(LocalDateTime createdAt) {
@@ -184,7 +191,7 @@ public class RegisterService {
         }
     }
 
-    private String urlEncode(String value) {
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    private String formatDisplayDate(LocalDate date) {
+        return date == null ? "Chưa xác định" : DISPLAY_DATE_FORMAT.format(date);
     }
 }

@@ -1,17 +1,24 @@
 package com.example.library.backend.registration.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Properties;
 
 import com.example.library.LibraryApplication;
 import com.example.library.backend.registration.model.ActivationNotificationStatus;
@@ -24,9 +31,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 
 @SpringBootTest(classes = LibraryApplication.class)
 @AutoConfigureMockMvc
@@ -38,6 +50,9 @@ class RegisterControllerWebTest {
 
     @Autowired
     private LibraryRegistrationRepository registrationRepository;
+
+    @MockitoBean
+    private JavaMailSender mailSender;
 
     @BeforeEach
     void cleanDatabase() {
@@ -53,6 +68,13 @@ class RegisterControllerWebTest {
     }
 
     @Test
+    void loginPageIsPublic() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("login"));
+    }
+
+    @Test
     void submitRegisterFormSavesRegistration() throws Exception {
         MockMultipartFile avatar = new MockMultipartFile(
                 "avatar",
@@ -62,6 +84,7 @@ class RegisterControllerWebTest {
 
         mockMvc.perform(multipart("/register")
                         .file(avatar)
+                        .with(csrf())
                         .param("name", "Nguyen Van A")
                         .param("gender", "male")
                         .param("dob", "2000-01-01")
@@ -74,7 +97,7 @@ class RegisterControllerWebTest {
                         .param("phone", "0987654321")
                         .param("email", "vana@example.com"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/register/success/*"));
+                .andExpect(redirectedUrl("/register/success"));
 
         assertThat(registrationRepository.count()).isEqualTo(1);
         LibraryRegistration saved = registrationRepository.findAll().get(0);
@@ -86,25 +109,19 @@ class RegisterControllerWebTest {
     }
 
     @Test
-    void registerSuccessPageRendersSavedRegistration() throws Exception {
-        LibraryRegistration saved = registrationRepository.save(createRegistration(
-                "Do Anh Thu",
-                "thu@example.com",
-                "555555555555",
-                "HS-20260402-A000",
-                LocalDateTime.of(2026, 4, 2, 7, 45)));
-
-        mockMvc.perform(get("/register/success/{id}", saved.getId()))
+    void registerSuccessPageDoesNotExposeArchivedRegistration() throws Exception {
+        mockMvc.perform(get("/register/success"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("register-success"))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Ho so da duoc luu thanh cong")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Do Anh Thu")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Chua kich hoat")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("/login")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("/registrations"))))
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("/register/avatar"))));
     }
 
     @Test
     void submitRegisterFormShowsValidationErrorsWhenDataIsInvalid() throws Exception {
         mockMvc.perform(multipart("/register")
+                        .with(csrf())
                         .param("gender", "male")
                         .param("dob", "2000-01-01")
                         .param("birthPlace", "Ha Noi")
@@ -123,7 +140,28 @@ class RegisterControllerWebTest {
     }
 
     @Test
-    void registrationsPageSupportsSearchAndSorting() throws Exception {
+    void anonymousUserCannotOpenRegistrationArchive() throws Exception {
+        mockMvc.perform(get("/registrations"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+    }
+
+    @Test
+    void anonymousUserCannotReadStoredAvatar() throws Exception {
+        LibraryRegistration saved = registrationRepository.save(createRegistration(
+                "Do Anh Thu",
+                "thu@example.com",
+                "555555555555",
+                "HS-20260402-A000",
+                LocalDateTime.of(2026, 4, 2, 7, 45)));
+
+        mockMvc.perform(get("/register/avatar/{id}", saved.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+    }
+
+    @Test
+    void registrationsPageSupportsSearchAndSortingForAdmin() throws Exception {
         registrationRepository.save(createRegistration(
                 "Tran Thi Lan",
                 "lan@example.com",
@@ -137,7 +175,9 @@ class RegisterControllerWebTest {
                 "HS-20260402-A002",
                 LocalDateTime.of(2026, 4, 2, 9, 30)));
 
-        mockMvc.perform(get("/registrations").param("q", "Lan"))
+        mockMvc.perform(get("/registrations")
+                        .with(user("admin").roles("ADMIN"))
+                        .param("q", "Lan"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registrations"))
                 .andExpect(model().attributeExists("registrations"))
@@ -147,7 +187,7 @@ class RegisterControllerWebTest {
     }
 
     @Test
-    void registrationDetailShowsArchivedRecord() throws Exception {
+    void registrationDetailShowsArchivedRecordForAdmin() throws Exception {
         LibraryRegistration saved = registrationRepository.save(createRegistration(
                 "Le Thu Ha",
                 "ha@example.com",
@@ -155,7 +195,8 @@ class RegisterControllerWebTest {
                 "HS-20260402-A003",
                 LocalDateTime.of(2026, 4, 2, 10, 15)));
 
-        mockMvc.perform(get("/registrations/{id}", saved.getId()))
+        mockMvc.perform(get("/registrations/{id}", saved.getId())
+                        .with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("registration-detail"))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Le Thu Ha")))
@@ -164,7 +205,7 @@ class RegisterControllerWebTest {
     }
 
     @Test
-    void activateAccountPreparesActivationNotification() throws Exception {
+    void activateAccountPreparesActivationNotificationForAdmin() throws Exception {
         LibraryRegistration saved = registrationRepository.save(createRegistration(
                 "Pham Thu Trang",
                 "trang@example.com",
@@ -172,7 +213,9 @@ class RegisterControllerWebTest {
                 "HS-20260402-A004",
                 LocalDateTime.of(2026, 4, 2, 11, 0)));
 
-        mockMvc.perform(post("/registrations/{id}/activate-account", saved.getId()))
+        mockMvc.perform(post("/registrations/{id}/activate-account", saved.getId())
+                        .with(user("admin").roles("ADMIN"))
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection());
 
         LibraryRegistration updated = registrationRepository.findById(saved.getId()).orElseThrow();
@@ -184,14 +227,16 @@ class RegisterControllerWebTest {
         assertThat(updated.getAccountActivatedAt()).isNotNull();
         assertThat(updated.getActivationNotificationPreparedAt()).isNotNull();
 
-        mockMvc.perform(get("/registrations/{id}", saved.getId()))
+        mockMvc.perform(get("/registrations/{id}", saved.getId())
+                        .with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Thong bao kich hoat san sang gui")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("SMTP")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Pham Thu Trang")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("trang@example.com")));
     }
 
     @Test
-    void confirmNotificationMarksActivationAsCompleted() throws Exception {
+    void sendNotificationMarksActivationAsCompletedForAdmin() throws Exception {
         LibraryRegistration saved = createRegistration(
                 "Vo Minh Chau",
                 "chau@example.com",
@@ -206,13 +251,18 @@ class RegisterControllerWebTest {
         saved.setActivationNotificationPreparedAt(LocalDateTime.of(2026, 4, 2, 12, 10));
         saved = registrationRepository.save(saved);
 
-        mockMvc.perform(post("/registrations/{id}/confirm-notification", saved.getId()))
+        when(mailSender.createMimeMessage()).thenReturn(new MimeMessage(Session.getInstance(new Properties())));
+
+        mockMvc.perform(post("/registrations/{id}/send-notification", saved.getId())
+                        .with(user("admin").roles("ADMIN"))
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection());
 
         LibraryRegistration updated = registrationRepository.findById(saved.getId()).orElseThrow();
         assertThat(updated.getActivationNotificationStatus()).isEqualTo(ActivationNotificationStatus.NOTIFIED);
         assertThat(updated.getActivationNotificationSentAt()).isNotNull();
         assertThat(updated.getNotificationPasswordPlaintext()).isNull();
+        verify(mailSender).send(any(MimeMessage.class));
     }
 
     private LibraryRegistration createRegistration(
