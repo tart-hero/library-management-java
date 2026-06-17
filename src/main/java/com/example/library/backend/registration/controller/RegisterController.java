@@ -54,8 +54,8 @@ public class RegisterController {
         }
 
         try {
-            LibraryRegistration registration = registerService.saveRegistration(form);
-            return "redirect:/register/success/" + registration.getId();
+            registerService.saveRegistration(form);
+            return "redirect:/register/success";
         } catch (IOException ex) {
             bindingResult.rejectValue("avatar", "avatar.upload", "Khong the luu anh dang ky. Vui long thu lai.");
             model.addAttribute("registerForm", form);
@@ -63,9 +63,8 @@ public class RegisterController {
         }
     }
 
-    @GetMapping("/register/success/{id}")
-    public String showSuccess(@PathVariable Long id, Model model) {
-        model.addAttribute("registration", registerService.getRegistration(id));
+    @GetMapping("/register/success")
+    public String showSuccess() {
         return "register-success";
     }
 
@@ -93,20 +92,20 @@ public class RegisterController {
             registerService.activateLibraryAccount(id);
             redirectAttributes.addFlashAttribute(
                     "statusMessage",
-                    "Tai khoan thu vien da duoc kich hoat. Thong bao kich hoat da san sang de gui.");
+                    "Tài khoản thư viện đã được kích hoạt. Thông báo kích hoạt đã sẵn sàng để gửi qua SMTP.");
         } catch (IllegalArgumentException | IllegalStateException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         }
         return "redirect:/registrations/" + id;
     }
 
-    @PostMapping("/registrations/{id}/confirm-notification")
-    public String confirmNotificationSent(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    @PostMapping("/registrations/{id}/send-notification")
+    public String sendNotification(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            registerService.confirmActivationNotificationSent(id);
+            registerService.sendActivationNotification(id);
             redirectAttributes.addFlashAttribute(
                     "statusMessage",
-                    "Da ghi nhan viec thong bao kich hoat tai khoan thu vien cho ban doc.");
+                    "Email kích hoạt tài khoản thư viện đã được gửi thành công.");
         } catch (IllegalArgumentException | IllegalStateException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         }
